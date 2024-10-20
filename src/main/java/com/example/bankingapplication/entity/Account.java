@@ -1,11 +1,11 @@
 package com.example.bankingapplication.entity;
 
+import com.example.bankingapplication.annotation.Phone;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.processing.Pattern;
 import org.javamoney.moneta.Money;
 
 @Data
@@ -21,6 +21,7 @@ public class Account {
     @Column(nullable = false)
     private String name;
 
+    @Phone
     @Column(nullable = false, unique = true)
     private String number;
 

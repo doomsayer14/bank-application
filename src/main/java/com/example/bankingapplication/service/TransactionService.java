@@ -2,7 +2,6 @@ package com.example.bankingapplication.service;
 
 import com.example.bankingapplication.dto.TransactionDto;
 import com.example.bankingapplication.entity.Transaction;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface TransactionService {
     /**
@@ -11,7 +10,6 @@ public interface TransactionService {
      * @param transactionDto transaction to be completed.
      * @return Completed transaction.
      */
-    @Transactional
     Transaction deposit(TransactionDto transactionDto);
 
     /**
@@ -20,7 +18,6 @@ public interface TransactionService {
      * @param transactionDto transaction to be completed.
      * @return Completed transaction.
      */
-    @Transactional
     Transaction withdraw(TransactionDto transactionDto);
 
     /**
@@ -29,6 +26,6 @@ public interface TransactionService {
      * @param transactionDto transaction to be completed.
      * @return Completed transaction.
      */
-    @Transactional
     Transaction transfer(TransactionDto transactionDto);
+
 }

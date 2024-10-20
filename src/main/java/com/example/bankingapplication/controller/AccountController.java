@@ -6,6 +6,9 @@ import com.example.bankingapplication.mapper.AccountMapper;
 import com.example.bankingapplication.service.impl.AccountServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,7 +49,7 @@ public class AccountController {
      * @return ResponseEntity<AccountDto> with new id and 200 HTTP code.
      */
     @GetMapping("/")
-    public ResponseEntity<AccountDto> getAccountByNumber(@RequestParam(required = true) String number) {
+    public ResponseEntity<AccountDto> getAccountByNumber(@RequestParam() String number) {
         Account account = accountServiceImpl.getAccountByNumber(number);
         AccountDto accountDto = accountMapper.accountToAccountDto(account);
         return ResponseEntity.ok(accountDto);
@@ -55,7 +58,7 @@ public class AccountController {
     /**
      * Endpoint which can be called to get all Accounts.
      *
-     * @return ResponseEntity<List < AccountDto>> with new id and 200 HTTP code.
+     * @return ResponseEntity<List<AccountDto>> with new id and 200 HTTP code.
      */
     @GetMapping("/all")
     public ResponseEntity<List<AccountDto>> getAllAccounts() {
@@ -70,22 +73,45 @@ public class AccountController {
      * Endpoint which can be called to create new Account.
      *
      * @param account The account to be created.
-     * @return ResponseEntity<AccountDto> with new id and 201 HTTP code.
+     * @return ResponseEntity<Object> with new id and 201 HTTP code.
      */
     @PostMapping("/")
-    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto account) {
+    public ResponseEntity<Object> createAccount(@RequestBody @Validated AccountDto account,
+                                                    BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(bindingResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .toList(), HttpStatus.BAD_REQUEST);
+        }
         Account createdAccount = accountServiceImpl.createAccount(account);
         AccountDto accountDto = accountMapper.accountToAccountDto(createdAccount);
         return new ResponseEntity<>(accountDto, HttpStatus.CREATED);
     }
 
+    /**
+     * Endpoint which can be called to update an Account.
+     *
+     * @return ResponseEntity<Object> with updated fields and 200 HTTP code.
+     */
     @PostMapping("/update")
-    public ResponseEntity<AccountDto> updateAccount(@RequestBody AccountDto accountDto) {
+    public ResponseEntity<Object> updateAccount(@RequestBody @Validated AccountDto accountDto,
+                                                    BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(bindingResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .toList(), HttpStatus.BAD_REQUEST);
+        }
         Account updatedAccount = accountServiceImpl.updateAccount(accountDto);
         AccountDto updatedAccountDto = accountMapper.accountToAccountDto(updatedAccount);
         return ResponseEntity.ok(updatedAccountDto);
     }
 
+    /**
+     * Endpoint which can be called to create new Account.
+     *
+     * @param accountId The account to be deleted.
+     * @return ResponseEntity<AccountDto> with new id and 201 HTTP code.
+     */
     @DeleteMapping("/{accountId}")
     public ResponseEntity<HttpStatus> deleteAccount(@PathVariable("accountId") String accountId) {
         accountServiceImpl.deleteAccount(Long.parseLong(accountId));
