@@ -75,7 +75,7 @@ public final class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getAccountByNumber(String number) {
-        return accountRepository.findByAccountNumber(number)
+        return accountRepository.findByNumber(number)
                 .orElseThrow(() -> new AccountNotFoundException
                         ("The account cannot be found for number" + number));
     }

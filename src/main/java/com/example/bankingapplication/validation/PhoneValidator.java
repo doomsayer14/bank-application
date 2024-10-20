@@ -20,7 +20,7 @@ public class PhoneValidator implements ConstraintValidator<Phone, String> {
      * +1 123 456 7890
      * 1234567890
      */
-    private static final String PHONE_PATTERN = "^\\+?(\\d{1,3})?[-. ]?\\(?\\d{1,4}\\)?[-. ]?\\d{1,4}[-. ]?\\d{1,9}$\n";
+    private static final String PHONE_PATTERN = "^\\+?(\\d{1,3})?[-.\\s]?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}$";
 
     @Override
     public void initialize(Phone constraintAnnotation) {
